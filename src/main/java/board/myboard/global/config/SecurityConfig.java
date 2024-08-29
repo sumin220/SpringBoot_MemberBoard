@@ -1,6 +1,9 @@
 package board.myboard.global.config;
 
+import board.myboard.global.auth.LoginService;
 import board.myboard.global.filter.JsonUsernamePasswordAuthenticationFilter;
+import board.myboard.global.handler.LoginFailureHandler;
+import board.myboard.global.handler.LoginSuccessJWTProvideHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,8 +26,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
 
-//    private final LoginService loginService;
-
+    private final LoginService loginService;
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -74,11 +76,21 @@ public class SecurityConfig {
     }
 
     @Bean
+    public LoginSuccessJWTProvideHandler loginSuccessJWTProvideHandler() {
+        return new LoginSuccessJWTProvideHandler();
+    }
+
+    @Bean
+    public LoginFailureHandler loginFailureHandler() {
+        return new LoginFailureHandler();
+    }
+
+    @Bean
     public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordLoginFilter(){
         JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordLoginFilter = new JsonUsernamePasswordAuthenticationFilter(objectMapper);
         jsonUsernamePasswordLoginFilter.setAuthenticationManager(authenticationManager());
-        //jsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessJWTProvideHandler());
-        //jsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
+        jsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessJWTProvideHandler());
+        jsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
         return jsonUsernamePasswordLoginFilter;
     }
 }

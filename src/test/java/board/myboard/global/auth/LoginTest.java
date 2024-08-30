@@ -6,23 +6,24 @@ import board.myboard.domain.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.http.MediaType.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -82,4 +83,17 @@ class LoginTest {
                 .content(objectMapper.writeValueAsString(UsernamePasswordMap)));
     }
 
+    @Test
+    public void 로그인_성공() throws Exception {
+        //given
+        Map<String, String> map = getUsernamePasswordMap(USERNAME, PASSWORD);
+
+
+        //when, then
+        MvcResult result = perform(LOGIN_URL, APPLICATION_JSON, map)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
 }

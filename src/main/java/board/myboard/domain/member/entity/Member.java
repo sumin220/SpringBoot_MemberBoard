@@ -58,4 +58,17 @@ public class Member extends BaseTimeEntity {
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
     }
+
+    //== 토큰 관련 ==//
+
+    @Column(length = 1000)
+    private String refreshToken; //리프레시토큰
+
+    public void upadateRefreshToekn(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void destroyRefreshToken() {
+        this.refreshToken = null;
+    }
 }

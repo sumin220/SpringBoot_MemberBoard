@@ -25,7 +25,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     private static final String CONTENT_TYPE = "application/json";//json 타입의 데이터로만 로그인을 진행한다.
 
     private final ObjectMapper objectMapper;
-
+    
     private static final String USERNAME_KEY="username";
     private static final String PASSWORD_KEY="password";
 

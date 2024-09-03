@@ -64,7 +64,7 @@ public class Member extends BaseTimeEntity {
     @Column(length = 1000)
     private String refreshToken; //리프레시토큰
 
-    public void upadateRefreshToekn(String refreshToken) {
+    public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 

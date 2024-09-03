@@ -16,7 +16,7 @@ public interface JwtService {
 
     void destroyRefreshToken(String username);
 
-    void sendToken(HttpServletResponse response, String accessToken, String refreshToken);
+    void sendToken(HttpServletResponse response, String accessToken, String refreshToken) throws IOException;
 
     String extractAccessToken(HttpServletRequest request) throws IOException, ServletException;
 

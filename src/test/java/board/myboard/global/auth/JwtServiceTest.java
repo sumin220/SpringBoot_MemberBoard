@@ -232,6 +232,5 @@ class JwtServiceTest {
         //then
         assertThat(extractAccessToken).isEqualTo(accessToken);
         assertThat(JWT.require(Algorithm.HMAC512(secret)).build().verify(extractAccessToken).getClaim(USERNAME_CLAIM).asString()).isEqualTo(username);
-
     }
 }

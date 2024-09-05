@@ -1,5 +1,8 @@
 package board.myboard.global.config;
 
+import board.myboard.domain.member.entity.Member;
+import board.myboard.domain.member.repository.MemberRepository;
+import board.myboard.global.auth.JwtService;
 import board.myboard.global.auth.LoginService;
 import board.myboard.global.filter.JsonUsernamePasswordAuthenticationFilter;
 import board.myboard.global.handler.LoginFailureHandler;
@@ -28,14 +31,9 @@ public class SecurityConfig {
 
     private final LoginService loginService;
     private final ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
+    private final JwtService jwtService;
 
-    @Bean
-    public AuthenticationManager authenticationManager() {//2 - AuthenticationManager 등록
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();//DaoAuthenticationProvider 사용
-        provider.setPasswordEncoder(bCryptPasswordEncoder());//PasswordEncoder로는 PasswordEncoderFactories.createDelegatingPasswordEncoder() 사용
-//        provider.setUserDetailsService(loginService);
-        return new ProviderManager(provider);
-    }
 
 
     @Bean
@@ -76,8 +74,16 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager() {//2 - AuthenticationManager 등록
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();//DaoAuthenticationProvider 사용
+        provider.setPasswordEncoder(bCryptPasswordEncoder());//PasswordEncoder로는 PasswordEncoderFactories.createDelegatingPasswordEncoder() 사용
+        provider.setUserDetailsService(loginService);
+        return new ProviderManager(provider);
+    }
+
+    @Bean
     public LoginSuccessJWTProvideHandler loginSuccessJWTProvideHandler() {
-        return new LoginSuccessJWTProvideHandler();
+        return new LoginSuccessJWTProvideHandler(jwtService, memberRepository);
     }
 
     @Bean
@@ -93,4 +99,6 @@ public class SecurityConfig {
         jsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
         return jsonUsernamePasswordLoginFilter;
     }
+
+
 }

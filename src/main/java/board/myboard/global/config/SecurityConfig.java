@@ -5,6 +5,7 @@ import board.myboard.domain.member.repository.MemberRepository;
 import board.myboard.global.auth.JwtService;
 import board.myboard.global.auth.LoginService;
 import board.myboard.global.filter.JsonUsernamePasswordAuthenticationFilter;
+import board.myboard.global.filter.JwtAuthenticationProcessingFilter;
 import board.myboard.global.handler.LoginFailureHandler;
 import board.myboard.global.handler.LoginSuccessJWTProvideHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -70,6 +72,11 @@ public class SecurityConfig {
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        //필터 추가
+        http
+                .addFilterAfter(jsonUsernamePasswordLoginFilter(), LogoutFilter.class)
+                .addFilterBefore(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -100,5 +107,12 @@ public class SecurityConfig {
         return jsonUsernamePasswordLoginFilter;
     }
 
+    @Bean
+    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+
+        JwtAuthenticationProcessingFilter jsonUsernamePasswordLoginFilter = new JwtAuthenticationProcessingFilter(jwtService, memberRepository);
+
+        return jsonUsernamePasswordLoginFilter;
+    }
 
 }

@@ -33,6 +33,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final MemberRepository memberRepository;
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    //사용자에게 부여될 권한을 다른 권한으로 매핑 / 아무런 변경 없이 입력받은 권한은 그대로 반환 = 매핑할 필요가 없다.
 
     private final String NO_CHECK_URL = "/login";
 

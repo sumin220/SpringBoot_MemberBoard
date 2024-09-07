@@ -1,9 +1,16 @@
 package board.myboard.domain.member.entity;
 
+import board.myboard.domain.comment.entity.Comment;
+import board.myboard.domain.post.entity.Post;
 import board.myboard.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 
 @Getter
@@ -36,6 +43,28 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role; //권한 -> USER, ADMOIN
 
+    @Column(length = 1000)
+    private String refreshToken; //리프레시토큰
+
+
+    //== 회원탈퇴 -> 작성한 게시물, 댓글 모두 삭제 ==//
+    @OneToMany(mappedBy = "writer", cascade = ALL, orphanRemoval = true)
+    private List<Post> postList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer", cascade = ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
+
+
+    //== 연관관계 메서드 ==//
+    public void addPost(Post post) {
+        //post의 writer 설정은 post에서 함
+        postList.add(post);
+    }
+
+    public void addComment(Comment comment) {
+        //comment의 writer 설정은 comment에서 함
+        commentList.add(comment);
+    }
 
     //== 정보 수정 ==//
     public void updatePassword(PasswordEncoder passwordEncoder, String password) {
@@ -60,10 +89,6 @@ public class Member extends BaseTimeEntity {
     }
 
     //== 토큰 관련 ==//
-
-    @Column(length = 1000)
-    private String refreshToken; //리프레시토큰
-
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }

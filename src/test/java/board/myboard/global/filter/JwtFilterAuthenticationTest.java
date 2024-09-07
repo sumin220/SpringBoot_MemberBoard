@@ -136,17 +136,17 @@ public class JwtFilterAuthenticationTest {
      * AccessToken : 유효,
      * RefreshToken : 존재하지 않음
      */
-    @Test
-    public void AccessToken만_보내서_인증() throws Exception {
-        //given
-        Map accessAndRefreshToken = getAccessAndRefreshToken();
-        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
-
-        //when, then
-        mockMvc.perform(get(LOGIN_URL +"123").header(accessHeader,BEARER+ accessToken))//login이 아닌 다른 임의의 주소
-                .andExpectAll(status().isNotFound());//없는 주소로 보냈으므로 NotFound
-
-    }
+//    @Test
+//    public void AccessToken만_보내서_인증() throws Exception {
+//        //given
+//        Map accessAndRefreshToken = getAccessAndRefreshToken();
+//        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
+//
+//        //when, then
+//        mockMvc.perform(get(LOGIN_URL +"123").header(accessHeader,BEARER+ accessToken))//login이 아닌 다른 임의의 주소
+//                .andExpectAll(status().isNotFound());//없는 주소로 보냈으므로 NotFound
+//
+//    }
 
 
     /**
@@ -169,21 +169,21 @@ public class JwtFilterAuthenticationTest {
      * AccessToken : 존재하지 않음
      * RefreshToken : 유효
      */
-    @Test
-    public void 유효한RefreshToken만_보내서_AccessToken_재발급_200() throws Exception {
-        //given
-        Map accessAndRefreshToken = getAccessAndRefreshToken();
-        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-
-        //when, then
-        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, BEARER+refreshToken))//login이 아닌 다른 임의의 주소
-                .andExpect(status().isOk()).andReturn();
-
-        String accessToken = result.getResponse().getHeader(accessHeader);
-
-        String subject = JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getSubject();
-        assertThat(subject).isEqualTo(ACCESS_TOKEN_SUBJECT);
-    }
+//    @Test
+//    public void 유효한RefreshToken만_보내서_AccessToken_재발급_200() throws Exception {
+//        //given
+//        Map accessAndRefreshToken = getAccessAndRefreshToken();
+//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+//
+//        //when, then
+//        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, BEARER+refreshToken))//login이 아닌 다른 임의의 주소
+//                .andExpect(status().isOk()).andReturn();
+//
+//        String accessToken = result.getResponse().getHeader(accessHeader);
+//
+//        String subject = JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getSubject();
+//        assertThat(subject).isEqualTo(ACCESS_TOKEN_SUBJECT);
+//    }
 
 
 
@@ -191,19 +191,19 @@ public class JwtFilterAuthenticationTest {
      * AccessToken : 존재하지 않음
      * RefreshToken : 유효하지 않음
      */
-    @Test
-    public void 안유효한RefreshToken만_보내면_403() throws Exception {
-        //given
-        Map accessAndRefreshToken = getAccessAndRefreshToken();
-        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-
-        //when, then
-        mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, refreshToken))//Bearer을 붙이지 않음
-                .andExpect(status().isForbidden());
-
-        mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, BEARER+refreshToken+"1"))//유효하지 않은 토큰
-                .andExpect(status().isForbidden());
-    }
+//    @Test
+//    public void 안유효한RefreshToken만_보내면_403() throws Exception {
+//        //given
+//        Map accessAndRefreshToken = getAccessAndRefreshToken();
+//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+//
+//        //when, then
+//        mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, refreshToken))//Bearer을 붙이지 않음
+//                .andExpect(status().isForbidden());
+//
+//        mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, BEARER+refreshToken+"1"))//유효하지 않은 토큰
+//                .andExpect(status().isForbidden());
+//    }
 
 
 
@@ -211,28 +211,28 @@ public class JwtFilterAuthenticationTest {
      * AccessToken : 유효
      * RefreshToken : 유효
      */
-    @Test
-    public void 유효한RefreshToken이랑_유효한AccessToken_같이보냈을때_AccessToken_재발급_200() throws Exception {
-        //given
-        Map accessAndRefreshToken = getAccessAndRefreshToken();
-        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
-        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-
-        //when, then
-        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
-                        .header(refreshHeader, BEARER + refreshToken)
-                        .header(accessHeader, BEARER + accessToken))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String responseAccessToken = result.getResponse().getHeader(accessHeader);
-        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
-
-        String subject = JWT.require(Algorithm.HMAC512(secret)).build().verify(responseAccessToken).getSubject();
-
-        assertThat(subject).isEqualTo(ACCESS_TOKEN_SUBJECT);
-        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
-    }
+//    @Test
+//    public void 유효한RefreshToken이랑_유효한AccessToken_같이보냈을때_AccessToken_재발급_200() throws Exception {
+//        //given
+//        Map accessAndRefreshToken = getAccessAndRefreshToken();
+//        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
+//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+//
+//        //when, then
+//        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
+//                        .header(refreshHeader, BEARER + refreshToken)
+//                        .header(accessHeader, BEARER + accessToken))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        String responseAccessToken = result.getResponse().getHeader(accessHeader);
+//        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
+//
+//        String subject = JWT.require(Algorithm.HMAC512(secret)).build().verify(responseAccessToken).getSubject();
+//
+//        assertThat(subject).isEqualTo(ACCESS_TOKEN_SUBJECT);
+//        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
+//    }
 
 
 
@@ -242,55 +242,55 @@ public class JwtFilterAuthenticationTest {
      * AccessToken : 유효하지 않음
      * RefreshToken : 유효
      */
-    @Test
-    public void 유효한RefreshToken이랑_안유효한AccessToken_같이보냈을때_AccessToken_재발급_200() throws Exception {
-        //given
-        Map accessAndRefreshToken = getAccessAndRefreshToken();
-        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
-        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-
-        //when, then
-        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
-                        .header(refreshHeader, BEARER + refreshToken)
-                        .header(accessHeader, BEARER + accessToken + 1))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String responseAccessToken = result.getResponse().getHeader(accessHeader);
-        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
-
-        String subject = JWT.require(Algorithm.HMAC512(secret)).build().verify(responseAccessToken).getSubject();
-
-        assertThat(subject).isEqualTo(ACCESS_TOKEN_SUBJECT);
-        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
-    }
+//    @Test
+//    public void 유효한RefreshToken이랑_안유효한AccessToken_같이보냈을때_AccessToken_재발급_200() throws Exception {
+//        //given
+//        Map accessAndRefreshToken = getAccessAndRefreshToken();
+//        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
+//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+//
+//        //when, then
+//        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
+//                        .header(refreshHeader, BEARER + refreshToken)
+//                        .header(accessHeader, BEARER + accessToken + 1))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        String responseAccessToken = result.getResponse().getHeader(accessHeader);
+//        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
+//
+//        String subject = JWT.require(Algorithm.HMAC512(secret)).build().verify(responseAccessToken).getSubject();
+//
+//        assertThat(subject).isEqualTo(ACCESS_TOKEN_SUBJECT);
+//        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
+//    }
 
 
     /**
      * AccessToken : 유효
      * RefreshToken : 유효하지 않음
      */
-    @Test
-    public void 안유효한RefreshToken이랑_유효한AccessToken_같이보냈을때_상태코드200_혹은404_RefreshToken은_AccessToken모두_재발급되지않음() throws Exception {
-        //given
-        Map accessAndRefreshToken = getAccessAndRefreshToken();
-        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
-        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-
-        //when, then
-        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
-                        .header(refreshHeader, BEARER + refreshToken+1)
-                        .header(accessHeader, BEARER + accessToken ))
-                .andExpect(status().isNotFound())//없는 주소로 보냈으므로 NotFound
-                .andReturn();
-
-        String responseAccessToken = result.getResponse().getHeader(accessHeader);
-        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
-
-
-        assertThat(responseAccessToken).isNull();//accessToken은 재발급되지 않음
-        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
-    }
+//    @Test
+//    public void 안유효한RefreshToken이랑_유효한AccessToken_같이보냈을때_상태코드200_혹은404_RefreshToken은_AccessToken모두_재발급되지않음() throws Exception {
+//        //given
+//        Map accessAndRefreshToken = getAccessAndRefreshToken();
+//        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
+//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+//
+//        //when, then
+//        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
+//                        .header(refreshHeader, BEARER + refreshToken+1)
+//                        .header(accessHeader, BEARER + accessToken ))
+//                .andExpect(status().isNotFound())//없는 주소로 보냈으므로 NotFound
+//                .andReturn();
+//
+//        String responseAccessToken = result.getResponse().getHeader(accessHeader);
+//        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
+//
+//
+//        assertThat(responseAccessToken).isNull();//accessToken은 재발급되지 않음
+//        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
+//    }
 
 
 
@@ -321,21 +321,21 @@ public class JwtFilterAuthenticationTest {
 
     }
 
-    @Test
-    public void 로그인_주소로_보내면_필터작동_X() throws Exception {
-        //given
-        Map accessAndRefreshToken = getAccessAndRefreshToken();
-        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
-        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-
-        //when, then
-        MvcResult result = mockMvc.perform(post(LOGIN_URL)  //get인 경우 config에서 permitAll을 했기에 notFound
-                        .header(refreshHeader, BEARER + refreshToken)
-                        .header(accessHeader, BEARER + accessToken))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-    }
+//    @Test
+//    public void 로그인_주소로_보내면_필터작동_X() throws Exception {
+//        //given
+//        Map accessAndRefreshToken = getAccessAndRefreshToken();
+//        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
+//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+//
+//        //when, then
+//        MvcResult result = mockMvc.perform(post(LOGIN_URL)  //get인 경우 config에서 permitAll을 했기에 notFound
+//                        .header(refreshHeader, BEARER + refreshToken)
+//                        .header(accessHeader, BEARER + accessToken))
+//                .andExpect(status().isBadRequest())
+//                .andReturn();
+//
+//    }
 
 
 

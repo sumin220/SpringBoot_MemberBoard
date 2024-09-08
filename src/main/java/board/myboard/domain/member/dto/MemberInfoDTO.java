@@ -3,17 +3,19 @@ package board.myboard.domain.member.dto;
 import board.myboard.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class MemberInfoDTO {
 
-    private final String name;
+    private String name;
 
-    private final String nickName;
+    private String nickName;
 
-    private final String username;
+    private String username;
 
-    private final Integer age;
+    private Integer age;
 
     @Builder
     public MemberInfoDTO(Member member) {

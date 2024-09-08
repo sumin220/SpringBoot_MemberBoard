@@ -61,7 +61,7 @@ public class SecurityConfig {
                         HeadersConfigurer.FrameOptionsConfig::sameOrigin))
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/signup", "/").permitAll()
+                        .requestMatchers("/login", "/member/signUp", "/").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/member/hi").permitAll()
                         .anyRequest().authenticated());

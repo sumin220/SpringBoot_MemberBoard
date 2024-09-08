@@ -1,6 +1,5 @@
 package board.myboard.global.config;
 
-import board.myboard.domain.member.entity.Member;
 import board.myboard.domain.member.repository.MemberRepository;
 import board.myboard.global.auth.JwtService;
 import board.myboard.global.auth.LoginService;
@@ -21,6 +20,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
@@ -39,9 +40,11 @@ public class SecurityConfig {
 
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
+
 
 
     @Bean
@@ -83,7 +86,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager() {//2 - AuthenticationManager 등록
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();//DaoAuthenticationProvider 사용
-        provider.setPasswordEncoder(bCryptPasswordEncoder());//PasswordEncoder로는 PasswordEncoderFactories.createDelegatingPasswordEncoder() 사용
+        provider.setPasswordEncoder(passwordEncoder());//PasswordEncoder로는 PasswordEncoderFactories.createDelegatingPasswordEncoder() 사용
         provider.setUserDetailsService(loginService);
         return new ProviderManager(provider);
     }

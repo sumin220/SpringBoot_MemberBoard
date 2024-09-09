@@ -9,6 +9,7 @@ import board.myboard.global.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,12 +20,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -136,10 +139,10 @@ class MemberControllerTest {
         String updateMemberData = objectMapper.writeValueAsString(map);
         //when
         mockMvc.perform(
-                put("/member")
-                        .header(accessHeader, BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateMemberData))
+                        put("/member")
+                                .header(accessHeader, BEARER + accessToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(updateMemberData))
                 .andExpect(status().isOk());
 
         //then
@@ -165,10 +168,10 @@ class MemberControllerTest {
         String updateMemberData = objectMapper.writeValueAsString(map);
 
         mockMvc.perform(
-                put("/member")
-                        .header(accessHeader, BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateMemberData))
+                        put("/member")
+                                .header(accessHeader, BEARER + accessToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(updateMemberData))
                 .andExpect(status().isOk());
 
         //then
@@ -195,15 +198,96 @@ class MemberControllerTest {
         String updatePassword = objectMapper.writeValueAsString(map);
         //when
         mockMvc.perform(
-                put("/member/password")
-                        .header(accessHeader, BEARER + accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updatePassword))
+                        put("/member/password")
+                                .header(accessHeader, BEARER + accessToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(updatePassword))
                 .andExpect(status().isOk());
         //then
         Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
         assertThat(passwordEncoder.matches(password, member.getPassword())).isFalse();
-        assertThat(passwordEncoder.matches(password+"!@!@", member.getPassword())).isTrue();
+        assertThat(passwordEncoder.matches(password + "!@!@", member.getPassword())).isTrue();
     }
+
+    @Test
+    public void 회원탈퇴_성공() throws Exception {
+        //given
+        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, name, nickName, age));
+        signUp(signUpData);
+
+        String accessToken = getAccessToken();
+        signUpData = accessToken;
+        //when
+
+        Map<String, String> map = new HashMap<>();
+        map.put("checkPassword", password);
+
+        String updatePassword = objectMapper.writeValueAsString(map);
+
+        //then
+
+        mockMvc.perform(
+                        delete("/member")
+                                .header(accessHeader, BEARER + accessToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(updatePassword))
+                .andExpect(status().isOk());
+
+
+        assertThrows(Exception.class,
+                () -> memberRepository.findByUsername(username)
+                        .orElseThrow(
+                                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER)
+                        ));
+    }
+
+//    @Test
+//    public void 회원탈퇴_실패_비밀번호틀림() throws Exception {
+//        //given
+//        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, name, nickName, age));
+//        signUp(signUpData);
+//        //when
+//        String accessToken = getAccessToken();
+//
+//        Map<String, String> map = new HashMap<>();
+//        map.put("checkPassword", password+11);
+//
+//        String updatePassword = objectMapper.writeValueAsString(map);
+//
+//        //then
+//        mockMvc.perform(
+//                delete("/member")
+//                        .header(accessHeader, BEARER + accessToken)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(updatePassword))
+//                .andExpect(status().isOk());
+//
+//        Member member = memberRepository.findByUsername(username).orElseThrow(
+//                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+//
+//        assertThat(member).isNotNull();
+//    }
+
+//    @Test
+//    public void 내정보조회_성공() throws Exception {
+//        //given
+//        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, name, nickName, age));
+//        signUp(signUpData);
+//
+//        String accessToken = getAccessToken();
+//        //when
+//        MvcResult result = mockMvc.perform(
+//                get("/member")
+//                        .characterEncoding(StandardCharsets.UTF_8)
+//                        .header(accessHeader, BEARER + accessToken))
+//                .andExpect(status().isOk()).andReturn();
+//
+//        //then
+//        Map<String, Object> map = objectMapper.readValue(result.getResponse().getContentAsString(), Map.class);
+//        Member member = memberRepository.findByUsername(username).orElseThrow(
+//                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+//
+//        assertThat(member.getAge()).isEqualTo(age);
+//    }
 }

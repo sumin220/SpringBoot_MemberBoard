@@ -31,6 +31,9 @@ public enum ErrorCode {
     NOT_CHOSEN_CATEGORY(00, "카테고리를 선택하세요.") ,
     ACCESS_DENIED(00, "권한이 없습니다.") ,
 
+    /* 댓글 */
+    NOT_EXIST_COMMENT(00, "댓글이 없습니다."),
+
 
     /* 공용 */
     NOT_FOUND_ACCESS_TOKEN(00, "토큰을 찾을 수 없습니다."),

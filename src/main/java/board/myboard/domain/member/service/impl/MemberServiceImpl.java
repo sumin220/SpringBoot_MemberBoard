@@ -4,8 +4,10 @@ import board.myboard.domain.member.dto.MemberInfoDTO;
 import board.myboard.domain.member.dto.MemberSignUpDTO;
 import board.myboard.domain.member.dto.MemberUpdateDTO;
 import board.myboard.domain.member.entity.Member;
+import board.myboard.domain.member.exception.MemberException;
 import board.myboard.domain.member.repository.MemberRepository;
 import board.myboard.domain.member.service.MemberService;
+import board.myboard.global.exception.ErrorCode;
 import board.myboard.global.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
         member.encodePassword(passwordEncoder);
 
         if (memberRepository.findByUsername(memberSignUpDTO.username()).isPresent()) {
-            throw new Exception("이미 존재하는 아이디입니다");
+            throw new MemberException(ErrorCode.ALREADY_EXIST_MEMBER);
         }
 
         memberRepository.save(member);
@@ -38,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
     public void update(MemberUpdateDTO memberUpdateDTO) throws Exception {
 
         Member member = memberRepository.findByUsername(SecurityUtil.getLoginUsername()).orElseThrow(
-                () -> new Exception("회원이 존재하지 않습니다"));
+                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
         memberUpdateDTO.age().ifPresent(member::updateAge);
         memberUpdateDTO.name().ifPresent(member::updateName);
@@ -49,10 +51,10 @@ public class MemberServiceImpl implements MemberService {
     public void updatePassword(String checkPassword, String newPassword) throws Exception {
 
         Member member = memberRepository.findByUsername(SecurityUtil.getLoginUsername()).orElseThrow(
-                () -> new Exception("회원이 존재하지 않습니다"));
+                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
         if (!member.matchPassword(passwordEncoder, checkPassword)) {
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+            throw new MemberException(ErrorCode.MISMATCH_PASSWORD);
         }
 
         member.updatePassword(passwordEncoder, newPassword);
@@ -62,10 +64,10 @@ public class MemberServiceImpl implements MemberService {
     public void withdraw(String checkPassword) throws Exception {
 
         Member member = memberRepository.findByUsername(SecurityUtil.getLoginUsername()).orElseThrow(
-                () -> new Exception("회원이 존재하지 않습니다"));
+                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
         if (!member.matchPassword(passwordEncoder, checkPassword)) {
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+            throw new MemberException(ErrorCode.MISMATCH_PASSWORD);
         }
 
         memberRepository.delete(member);

@@ -64,7 +64,7 @@ public class MemberController {
     /**
      * 내정보조회
      */
-    @GetMapping("/member")
+    @GetMapping
     public ResponseEntity getMyInfo(HttpServletResponse response) throws Exception {
 
         MemberInfoDTO myInfo = memberService.getMyInfo();

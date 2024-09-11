@@ -5,6 +5,7 @@ import board.myboard.domain.member.entity.Member;
 import board.myboard.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -67,5 +68,11 @@ public class Post extends BaseTimeEntity {
 
     public void updateFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    @Builder
+    public Post(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 }

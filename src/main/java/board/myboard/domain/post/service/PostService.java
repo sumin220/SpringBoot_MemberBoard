@@ -5,7 +5,7 @@ import board.myboard.domain.post.dto.PostInfoDTO;
 import board.myboard.domain.post.dto.PostPagingDTO;
 import board.myboard.domain.post.dto.PostSaveDTO;
 import board.myboard.domain.post.dto.PostUpdateDTO;
-import board.myboard.domain.post.exception.PostException;
+import board.myboard.domain.post.exception.FileException;
 
 import java.awt.print.Pageable;
 
@@ -14,12 +14,12 @@ public interface PostService {
     /**
      * 게시글 등록
      */
-    void save(PostSaveDTO postSaveDTO) throws PostException;
+    void save(PostSaveDTO postSaveDTO) throws FileException;
 
     /**
      * 게시글 수정
      */
-    void update(Long id, PostUpdateDTO postUpdateDTO) throws PostException;
+    void update(Long id, PostUpdateDTO postUpdateDTO) throws FileException;
 
     /**
      * 게시글 삭제

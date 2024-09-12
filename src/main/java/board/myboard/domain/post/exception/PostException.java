@@ -10,5 +10,3 @@ public class PostException extends RuntimeException {
 
     private final ErrorCode errorCode;
 }
-
-

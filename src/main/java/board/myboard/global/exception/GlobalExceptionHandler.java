@@ -1,6 +1,7 @@
 package board.myboard.global.exception;
 
 import board.myboard.domain.member.exception.MemberException;
+import board.myboard.domain.post.exception.FileException;
 import board.myboard.domain.post.exception.PostException;
 import board.myboard.global.exception.dto.ErrorResponseV0;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -17,6 +18,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MemberException.class)
     public ErrorResponseV0 handleMemberException(MemberException exception) {
+        ErrorCode errorCode = exception.getErrorCode();
+
+        return getErrorResponse(errorCode);
+    }
+
+    @ExceptionHandler(FileException.class)
+    public ErrorResponseV0 handleFileException(FileException exception) {
         ErrorCode errorCode = exception.getErrorCode();
 
         return getErrorResponse(errorCode);

@@ -17,10 +17,13 @@ public enum ErrorCode {
     TITLE_MAX_NUMBER(00, "최대 글자 수를 초과했습니다."),
     NOT_FOUND_BOARD(00, "게시물을 찾을 수 없습니다."),
     ALREADY_DELETED(00, "이미 삭제된 게시물입니다."),
+    NOT_AUTHORITY_UPDATE_POST(00, "게시글을 수정할 수 없습니다."),
 
     /* 파일 */
     FILE_OVERSIZE(00, "파일 용량을 초과했습니다."),
     NOT_FOUND_FILE(00, "파일을 찾을 수 없습니다."),
+    FILE_CAN_NOT_SAVE(00, "파일을 저장할 수 없습니다."),
+    FILE_CAN_NOT_DELETE(00, "파일을 지울 수 없습니다."),
 
     /* 캘린더 */
     NOT_FOUND_SCHEDULE(00, "일정을 찾을 수 없습니다.") ,
@@ -29,15 +32,18 @@ public enum ErrorCode {
     NOT_FOUND_SCHEDULE_TITLE(00, "제목을 입력하세요.") ,
     NOT_CHOSEN_DATE(00, "날짜를 선택하세요.") ,
     NOT_CHOSEN_CATEGORY(00, "카테고리를 선택하세요.") ,
-    ACCESS_DENIED(00, "권한이 없습니다.") ,
+
 
     /* 댓글 */
     NOT_EXIST_COMMENT(00, "댓글이 없습니다."),
+    NOT_DELETE_COMMENT(00, "댓글을 삭제할 수 없습니다"),
+    NOT_CREATE_COMMENT(00, "댓글을 생성할 수 없습니다"),
 
 
     /* 공용 */
     NOT_FOUND_ACCESS_TOKEN(00, "토큰을 찾을 수 없습니다."),
-    EXPIRED_ACCESS_TOKEN(403, "토큰의 유효시간이 만료되었습니다.");
+    EXPIRED_ACCESS_TOKEN(403, "토큰의 유효시간이 만료되었습니다."),
+    ACCESS_DENIED(00, "권한이 없습니다.");
 
     private final int errorCode;
     private final String message;

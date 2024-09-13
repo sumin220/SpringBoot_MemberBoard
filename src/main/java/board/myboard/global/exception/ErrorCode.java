@@ -18,6 +18,7 @@ public enum ErrorCode {
     NOT_FOUND_BOARD(00, "게시물을 찾을 수 없습니다."),
     ALREADY_DELETED(00, "이미 삭제된 게시물입니다."),
     NOT_AUTHORITY_UPDATE_POST(00, "게시글을 수정할 수 없습니다."),
+    NOT_AUTHORITY_DELETE_POST(00, "게시글을 삭제할 권한이 없습니다."),
 
     /* 파일 */
     FILE_OVERSIZE(00, "파일 용량을 초과했습니다."),

@@ -1,7 +1,9 @@
 package board.myboard.domain.comment.service;
 
 import board.myboard.domain.comment.entity.Comment;
+import board.myboard.domain.comment.exception.CommentException;
 import board.myboard.domain.comment.repository.CommentRepository;
+import board.myboard.global.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -69,12 +71,13 @@ class CommentServiceTest {
         saveReComment(commentId);
         saveReComment(commentId);
 
-        assertThat(commentService.findById(commentId).getChildList().size()).isEqualTo(4);
-        //when
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).getChildList().size()).isEqualTo(4);
+
         commentService.remove(commentId);
         clear();
         //then
-        Comment findComment = commentService.findById(commentId);
+        Comment findComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT));
         assertThat(findComment).isNotNull();
         assertThat(findComment.isRemoved()).isTrue();
         assertThat(findComment.getChildList().size()).isEqualTo(4);
@@ -95,7 +98,8 @@ class CommentServiceTest {
         Long reCommentId3 = saveReComment(commentId);
         Long reCommentId4 = saveReComment(commentId);
         //when
-        assertThat(commentService.findById(commentId).getChildList().size()).isEqualTo(4);
+        assertThat(commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)));
         clear();
 
         commentService.remove(reCommentId1);
@@ -111,19 +115,26 @@ class CommentServiceTest {
         clear();
 
         //then
-        assertThat(commentService.findById(reCommentId1).isRemoved()).isTrue();
-        assertThat(commentService.findById(reCommentId2).isRemoved()).isTrue();
-        assertThat(commentService.findById(reCommentId3).isRemoved()).isTrue();
-        assertThat(commentService.findById(reCommentId4).isRemoved()).isTrue();
+        assertThat(commentRepository.findById(reCommentId1)
+                .orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).isRemoved()).isTrue();
+
+        assertThat(commentRepository.findById(reCommentId2)
+                .orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).isRemoved()).isTrue();
+
+        assertThat(commentRepository.findById(reCommentId3)
+                .orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).isRemoved()).isTrue();
+
+        assertThat(commentRepository.findById(reCommentId4)
+                .orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).isRemoved()).isTrue();
+
         clear();
 
         commentService.remove(commentId);
         clear();
 
         LongStream.rangeClosed(commentId, reCommentId4).forEach(id ->
-                assertThat(assertThrows(Exception.class,
-                        () -> commentService.findById(id)).getMessage()).isEqualTo("댓글이 없습니다."));
-
+                assertThat(assertThrows(CommentException.class, () -> commentRepository.findById(id)
+                        .orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT))).getErrorCode()).isEqualTo(ErrorCode.NOT_EXIST_COMMENT));
 
     }
 
@@ -143,10 +154,10 @@ class CommentServiceTest {
         commentService.remove(reCommentId);
         clear();
         //then
-        assertThat(commentService.findById(commentId)).isNotNull();
-        assertThat(commentService.findById(reCommentId)).isNotNull();
-        assertThat(commentService.findById(commentId).isRemoved()).isFalse();
-        assertThat(commentService.findById(reCommentId).isRemoved()).isTrue();
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)));
+        assertThat(commentRepository.findById(reCommentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)));
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)));
+        assertThat(commentRepository.findById(reCommentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)));
     }
 
     /**
@@ -171,15 +182,16 @@ class CommentServiceTest {
         commentService.remove(reCommentId3);
         clear();
 
-        assertThat(commentService.findById(commentId)).isNotNull();
-        assertThat(commentService.findById(commentId).getChildList()).size().isEqualTo(3);
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT))).isNotNull();
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).getChildList().size()).isEqualTo(3);
 
         commentService.remove(reCommentId1);
         //then
 
         LongStream.rangeClosed(commentId, reCommentId3).forEach(id ->
-                assertThat(assertThrows(Exception.class,
-                        () -> commentService.findById(id)).getMessage()).isEqualTo("댓글이 없습니다."));
+                assertThat(assertThrows(CommentException.class, () -> commentRepository.findById(id).orElseThrow(
+                        () -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)
+                )).getErrorCode()).isEqualTo(ErrorCode.NOT_EXIST_COMMENT));
 
     }
 
@@ -200,17 +212,18 @@ class CommentServiceTest {
         commentService.remove(commentId);
         clear();
 
-        assertThat(commentService.findById(commentId)).isNotNull();
-        assertThat(commentService.findById(commentId).getChildList().size()).isEqualTo(3);
-        //when
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT))).isNotNull();
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).getChildList().size()).isEqualTo(3);
 
+        //when
         commentService.remove(reCommentId2);
-        assertThat(commentService.findById(commentId)).isNotNull();
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT))).isNotNull();
+
         //then
-        assertThat(commentService.findById(reCommentId2)).isNotNull();
-        assertThat(commentService.findById(reCommentId2).isRemoved()).isTrue();
-        assertThat(commentService.findById(reCommentId1).getId()).isNotNull();
-        assertThat(commentService.findById(reCommentId3).getId()).isNotNull();
-        assertThat(commentService.findById(commentId).getId()).isNotNull();
-    }
+        assertThat(commentRepository.findById(reCommentId2).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT))).isNotNull();
+        assertThat(commentRepository.findById(reCommentId2).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).isRemoved()).isTrue();
+        assertThat(commentRepository.findById(reCommentId1).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).getId()).isNotNull();
+        assertThat(commentRepository.findById(reCommentId3).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).getId()).isNotNull();
+        assertThat(commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorCode.NOT_EXIST_COMMENT)).getId()).isNotNull();
+            }
 }

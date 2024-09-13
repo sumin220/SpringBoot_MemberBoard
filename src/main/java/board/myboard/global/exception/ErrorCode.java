@@ -39,6 +39,7 @@ public enum ErrorCode {
     NOT_EXIST_COMMENT(00, "댓글이 없습니다."),
     NOT_DELETE_COMMENT(00, "댓글을 삭제할 수 없습니다"),
     NOT_CREATE_COMMENT(00, "댓글을 생성할 수 없습니다"),
+    NOT_AUTHORITY_UPDATE_COMMENT(00, "댓글을 수정할 권한이 없습니다"),
 
 
     /* 공용 */

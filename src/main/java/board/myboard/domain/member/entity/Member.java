@@ -41,6 +41,7 @@ public class Member extends BaseTimeEntity {
     private Integer age; //나이
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
     private Role role; //권한 -> USER, ADMOIN
 
     @Column(length = 1000)
@@ -48,9 +49,11 @@ public class Member extends BaseTimeEntity {
 
 
     //== 회원탈퇴 -> 작성한 게시물, 댓글 모두 삭제 ==//
+    @Builder.Default
     @OneToMany(mappedBy = "writer", cascade = ALL, orphanRemoval = true)
     private List<Post> postList = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "writer", cascade = ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package board.myboard.domain.post.dto;
 
+import board.myboard.domain.comment.dto.CommentInfoDTO;
 import board.myboard.domain.comment.entity.Comment;
 import board.myboard.domain.member.dto.MemberInfoDTO;
 import board.myboard.domain.post.entity.Post;

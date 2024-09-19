@@ -85,7 +85,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberInfoDTO getMyInfo() throws Exception {
         Member findMember = memberRepository.findByUsername(SecurityUtil.getLoginUsername()).orElseThrow(
-                () -> new Exception("회원이 존재하지 않습니다"));
+                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
         return new MemberInfoDTO(findMember);
     }

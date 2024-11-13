@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 class SecurityConfigTest {
 
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    PasswordEncoder bCryptPasswordEncoder;
 
     private static String PASSWORD = "수민SUMIN";
 

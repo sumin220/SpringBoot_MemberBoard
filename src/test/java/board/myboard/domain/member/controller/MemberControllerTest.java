@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -266,25 +267,25 @@ class MemberControllerTest {
         assertThat(member).isNotNull();
     }
 
-//    @Test
-//    public void 내정보조회_성공() throws Exception {
-//        //given
-//        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, name, nickName, age));
-//        signUp(signUpData);
-//
-//        String accessToken = getAccessToken();
-//        //when
-//        MvcResult result = mockMvc.perform(
-//                get("/member")
-//                        .characterEncoding(StandardCharsets.UTF_8)
-//                        .header(accessHeader, BEARER + accessToken))
-//                .andExpect(status().isOk()).andReturn();
-//
-//        //then
-//        Map<String, Object> map = objectMapper.readValue(result.getResponse().getContentAsString(), Map.class);
-//        Member member = memberRepository.findByUsername(username).orElseThrow(
-//                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
-//
-//        assertThat(member.getAge()).isEqualTo(age);
-//    }
+    @Test
+    public void 내정보조회_성공() throws Exception {
+        //given
+        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, name, nickName, age));
+        signUp(signUpData);
+
+        String accessToken = getAccessToken();
+        //when
+        MvcResult result = mockMvc.perform(
+                get("/member")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(accessHeader, BEARER + accessToken))
+                .andExpect(status().isOk()).andReturn();
+
+        //then
+        Map<String, Object> map = objectMapper.readValue(result.getResponse().getContentAsString(), Map.class);
+        Member member = memberRepository.findByUsername(username).orElseThrow(
+                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+
+        assertThat(member.getAge()).isEqualTo(age);
+    }
 }

@@ -239,32 +239,32 @@ class MemberControllerTest {
                         ));
     }
 
-//    @Test
-//    public void 회원탈퇴_실패_비밀번호틀림() throws Exception {
-//        //given
-//        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, name, nickName, age));
-//        signUp(signUpData);
-//        //when
-//        String accessToken = getAccessToken();
-//
-//        Map<String, String> map = new HashMap<>();
-//        map.put("checkPassword", password+11);
-//
-//        String updatePassword = objectMapper.writeValueAsString(map);
-//
-//        //then
-//        mockMvc.perform(
-//                delete("/member")
-//                        .header(accessHeader, BEARER + accessToken)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(updatePassword))
-//                .andExpect(status().isOk());
-//
-//        Member member = memberRepository.findByUsername(username).orElseThrow(
-//                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
-//
-//        assertThat(member).isNotNull();
-//    }
+    @Test
+    public void 회원탈퇴_실패_비밀번호틀림() throws Exception {
+        //given
+        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, name, nickName, age));
+        signUp(signUpData);
+        //when
+        String accessToken = getAccessToken();
+
+        Map<String, String> map = new HashMap<>();
+        map.put("checkPassword", password+11);
+
+        String updatePassword = objectMapper.writeValueAsString(map);
+
+        //then
+        mockMvc.perform(
+                delete("/member")
+                        .header(accessHeader, BEARER + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatePassword))
+                .andExpect(status().isOk());
+
+        Member member = memberRepository.findByUsername(username).orElseThrow(
+                () -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+
+        assertThat(member).isNotNull();
+    }
 
 //    @Test
 //    public void 내정보조회_성공() throws Exception {

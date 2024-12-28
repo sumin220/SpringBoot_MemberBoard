@@ -220,24 +220,24 @@ class CommentControllerTest {
                                 .contentType(MediaType.MULTIPART_FORM_DATA).params(map))
                 .andExpect(status().isNotFound());
     }
-//
-//    @Test
-//    public void 대댓글저장_실패_댓글이_없음() throws Exception {
-//        //given
-//        Long postId = savePost();
-//        Long parentId = saveComment();
-//
-//        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-//        map.add("content", "recomment");
-//
-//
-//        //when,then
-//        mockMvc.perform(
-//                        post("/comment/"+postId+"/"+10000)
-//                                .header("Authorization", "Bearer "+ getAccessToken())
-//                                .contentType(MediaType.MULTIPART_FORM_DATA).params(map))
-//                .andExpect(status().isNotFound());
-//    }
+
+    @Test
+    public void 대댓글저장_실패_댓글이_없음() throws Exception {
+        //given
+        Long postId = savePost();
+        Long parentId = saveComment();
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("content", "recomment");
+
+
+        //when,then
+        mockMvc.perform(
+                        post("/comment/"+postId+"/"+10000)
+                                .header("Authorization", "Bearer "+ getAccessToken())
+                                .contentType(MediaType.MULTIPART_FORM_DATA).params(map))
+                .andExpect(status().isNotFound());
+    }
 
     @Test
     public void 업데이트_성공() throws Exception {

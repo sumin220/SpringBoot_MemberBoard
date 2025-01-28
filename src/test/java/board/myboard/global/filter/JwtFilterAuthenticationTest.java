@@ -191,19 +191,19 @@ public class JwtFilterAuthenticationTest {
      * AccessToken : 존재하지 않음
      * RefreshToken : 유효하지 않음
      */
-//    @Test
-//    public void 안유효한RefreshToken만_보내면_403() throws Exception {
-//        //given
-//        Map accessAndRefreshToken = getAccessAndRefreshToken();
-//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-//
-//        //when, then
-//        mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, refreshToken))//Bearer을 붙이지 않음
-//                .andExpect(status().isForbidden());
-//
-//        mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, BEARER+refreshToken+"1"))//유효하지 않은 토큰
-//                .andExpect(status().isForbidden());
-//    }
+    @Test
+    public void 안유효한RefreshToken만_보내면_403() throws Exception {
+        //given
+        Map accessAndRefreshToken = getAccessAndRefreshToken();
+        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+
+        //when, then
+        mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, refreshToken))//Bearer을 붙이지 않음
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(get(LOGIN_URL + "123").header(refreshHeader, BEARER+refreshToken+"1"))//유효하지 않은 토큰
+                .andExpect(status().isForbidden());
+    }
 
 
 

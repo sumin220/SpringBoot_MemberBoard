@@ -36,12 +36,12 @@ class SecurityConfigTest {
         assertThat(bCryptPasswordEncoder.matches(PASSWORD, encodePassword)).isTrue();
     }
 //
-//    @Test
-//    public void 잘못된_비밀번호_매치_실패() {
-//        String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
-//        String wrongPassword = "wrongPassword";
-//        assertThat(bCryptPasswordEncoder.matches(wrongPassword, encodePassword)).isFalse();
-//    }
+    @Test
+    public void 잘못된_비밀번호_매치_실패() {
+        String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
+        String wrongPassword = "wrongPassword";
+        assertThat(bCryptPasswordEncoder.matches(wrongPassword, encodePassword)).isFalse();
+    }
 //
 //    @Test
 //    public void 빈_문자열_비밀번호_테스트() {

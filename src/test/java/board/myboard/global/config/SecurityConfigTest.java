@@ -30,11 +30,11 @@ class SecurityConfigTest {
         assertThat(encode1).isNotEqualTo(encode2);
     }
 
-//    @Test
-//    public void 암호화된_비밀번호_매치() {
-//        String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
-//        assertThat(bCryptPasswordEncoder.matches(PASSWORD, encodePassword)).isTrue();
-//    }
+    @Test
+    public void 암호화된_비밀번호_매치() {
+        String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
+        assertThat(bCryptPasswordEncoder.matches(PASSWORD, encodePassword)).isTrue();
+    }
 //
 //    @Test
 //    public void 잘못된_비밀번호_매치_실패() {

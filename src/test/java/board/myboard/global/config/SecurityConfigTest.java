@@ -49,12 +49,12 @@ class SecurityConfigTest {
         String encodePassword = bCryptPasswordEncoder.encode(emptyPassword);
         assertThat(bCryptPasswordEncoder.matches(emptyPassword, encodePassword)).isTrue();
     }
-//
-//    @Test
-//    public void null_비밀번호_예외처리() {
-//        assertThatThrownBy(() -> bCryptPasswordEncoder.encode(null))
-//                .isInstanceOf(IllegalArgumentException.class);
-//    }
+
+    @Test
+    public void null_비밀번호_예외처리() {
+        assertThatThrownBy(() -> bCryptPasswordEncoder.encode(null))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 //
 //    @Test
 //    public void 긴_문자열_비밀번호_암호화_및_매칭() {

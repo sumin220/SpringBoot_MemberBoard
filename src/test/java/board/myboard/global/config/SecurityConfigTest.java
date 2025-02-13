@@ -55,11 +55,11 @@ class SecurityConfigTest {
         assertThatThrownBy(() -> bCryptPasswordEncoder.encode(null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
-//
-//    @Test
-//    public void 긴_문자열_비밀번호_암호화_및_매칭() {
-//        String longPassword = "ThisIsAVeryLongPasswordWithMultipleCharacters1234567890!@#";
-//        String encodePassword = bCryptPasswordEncoder.encode(longPassword);
-//        assertThat(bCryptPasswordEncoder.matches(longPassword, encodePassword)).isTrue();
-//    }
+
+    @Test
+    public void 긴_문자열_비밀번호_암호화_및_매칭() {
+        String longPassword = "ThisIsAVeryLongPasswordWithMultipleCharacters1234567890!@#";
+        String encodePassword = bCryptPasswordEncoder.encode(longPassword);
+        assertThat(bCryptPasswordEncoder.matches(longPassword, encodePassword)).isTrue();
+    }
 //}

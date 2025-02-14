@@ -69,13 +69,13 @@ class SecurityConfigTest {
         String encodePassword = bCryptPasswordEncoder.encode(passwordWithSpaces);
         assertThat(bCryptPasswordEncoder.matches(passwordWithSpaces, encodePassword)).isTrue();
     }
-//
-//    @Test
-//    public void 특수문자_비밀번호_테스트() {
-//        String specialCharPassword = "!@#$%^&*()_+-=";
-//        String encodePassword = bCryptPasswordEncoder.encode(specialCharPassword);
-//        assertThat(bCryptPasswordEncoder.matches(specialCharPassword, encodePassword)).isTrue();
-//    }
+
+    @Test
+    public void 특수문자_비밀번호_테스트() {
+        String specialCharPassword = "!@#$%^&*()_+-=";
+        String encodePassword = bCryptPasswordEncoder.encode(specialCharPassword);
+        assertThat(bCryptPasswordEncoder.matches(specialCharPassword, encodePassword)).isTrue();
+    }
 //
 //    @Test
 //    public void 숫자만_포함된_비밀번호_테스트() {

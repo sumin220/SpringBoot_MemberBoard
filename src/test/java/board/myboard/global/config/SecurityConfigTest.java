@@ -76,13 +76,13 @@ class SecurityConfigTest {
         String encodePassword = bCryptPasswordEncoder.encode(specialCharPassword);
         assertThat(bCryptPasswordEncoder.matches(specialCharPassword, encodePassword)).isTrue();
     }
-//
-//    @Test
-//    public void 숫자만_포함된_비밀번호_테스트() {
-//        String numericPassword = "1234567890";
-//        String encodePassword = bCryptPasswordEncoder.encode(numericPassword);
-//        assertThat(bCryptPasswordEncoder.matches(numericPassword, encodePassword)).isTrue();
-//    }
+
+    @Test
+    public void 숫자만_포함된_비밀번호_테스트() {
+        String numericPassword = "1234567890";
+        String encodePassword = bCryptPasswordEncoder.encode(numericPassword);
+        assertThat(bCryptPasswordEncoder.matches(numericPassword, encodePassword)).isTrue();
+    }
 //
 //    @Test
 //    public void 대소문자_구분_테스트() {

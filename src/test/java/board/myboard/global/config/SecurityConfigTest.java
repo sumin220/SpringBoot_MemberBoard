@@ -91,13 +91,13 @@ class SecurityConfigTest {
         String encodePassword = bCryptPasswordEncoder.encode(upperCasePassword);
         assertThat(bCryptPasswordEncoder.matches(lowerCasePassword, encodePassword)).isFalse();
     }
-//
-//    @Test
-//    public void 같은_비밀번호_여러번_암호화_다른_결과_확인() {
-//        String encode1 = bCryptPasswordEncoder.encode(PASSWORD);
-//        String encode2 = bCryptPasswordEncoder.encode(PASSWORD);
-//        assertThat(encode1).isNotEqualTo(encode2);
-//    }
+
+    @Test
+    public void 같은_비밀번호_여러번_암호화_다른_결과_확인() {
+        String encode1 = bCryptPasswordEncoder.encode(PASSWORD);
+        String encode2 = bCryptPasswordEncoder.encode(PASSWORD);
+        assertThat(encode1).isNotEqualTo(encode2);
+    }
 //
 //    @Test
 //    public void 암호화된_비밀번호의_길이_확인() {

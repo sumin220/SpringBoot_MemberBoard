@@ -98,12 +98,12 @@ class SecurityConfigTest {
         String encode2 = bCryptPasswordEncoder.encode(PASSWORD);
         assertThat(encode1).isNotEqualTo(encode2);
     }
-//
-//    @Test
-//    public void 암호화된_비밀번호의_길이_확인() {
-//        String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
-//        assertThat(encodePassword.length()).isGreaterThan(50); // BCrypt는 일반적으로 60자 이상
-//    }
+
+    @Test
+    public void 암호화된_비밀번호의_길이_확인() {
+        String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
+        assertThat(encodePassword.length()).isGreaterThan(50); // BCrypt는 일반적으로 60자 이상
+    }
 //
 //    @Test
 //    public void 짧은_비밀번호_암호화_및_매칭() {

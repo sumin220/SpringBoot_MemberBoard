@@ -104,14 +104,14 @@ class SecurityConfigTest {
         String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
         assertThat(encodePassword.length()).isGreaterThan(50); // BCrypt는 일반적으로 60자 이상
     }
-//
-//    @Test
-//    public void 짧은_비밀번호_암호화_및_매칭() {
-//        String shortPassword = "pw";
-//        String encodePassword = bCryptPasswordEncoder.encode(shortPassword);
-//        assertThat(bCryptPasswordEncoder.matches(shortPassword, encodePassword)).isTrue();
-//    }
-//
+
+    @Test
+    public void 짧은_비밀번호_암호화_및_매칭() {
+        String shortPassword = "pw";
+        String encodePassword = bCryptPasswordEncoder.encode(shortPassword);
+        assertThat(bCryptPasswordEncoder.matches(shortPassword, encodePassword)).isTrue();
+    }
+
 //    @Test
 //    public void UTF8_문자열_비밀번호_테스트() {
 //        String utf8Password = "パスワード安全";

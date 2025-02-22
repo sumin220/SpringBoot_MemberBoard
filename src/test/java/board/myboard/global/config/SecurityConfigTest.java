@@ -118,13 +118,13 @@ class SecurityConfigTest {
         String encodePassword = bCryptPasswordEncoder.encode(utf8Password);
         assertThat(bCryptPasswordEncoder.matches(utf8Password, encodePassword)).isTrue();
     }
-//
-//    @Test
-//    public void 연속된_숫자_비밀번호_테스트() {
-//        String sequentialNumbers = "123456789";
-//        String encodePassword = bCryptPasswordEncoder.encode(sequentialNumbers);
-//        assertThat(bCryptPasswordEncoder.matches(sequentialNumbers, encodePassword)).isTrue();
-//    }
+
+    @Test
+    public void 연속된_숫자_비밀번호_테스트() {
+        String sequentialNumbers = "123456789";
+        String encodePassword = bCryptPasswordEncoder.encode(sequentialNumbers);
+        assertThat(bCryptPasswordEncoder.matches(sequentialNumbers, encodePassword)).isTrue();
+    }
 //
 //    @Test
 //    public void 해시된_비밀번호를_직접_비교하면_실패() {

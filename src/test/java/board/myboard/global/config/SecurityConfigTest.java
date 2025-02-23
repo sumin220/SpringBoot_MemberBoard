@@ -112,12 +112,12 @@ class SecurityConfigTest {
         assertThat(bCryptPasswordEncoder.matches(shortPassword, encodePassword)).isTrue();
     }
 
-//    @Test
-//    public void UTF8_문자열_비밀번호_테스트() {
-//        String utf8Password = "パスワード安全";
-//        String encodePassword = bCryptPasswordEncoder.encode(utf8Password);
-//        assertThat(bCryptPasswordEncoder.matches(utf8Password, encodePassword)).isTrue();
-//    }
+    @Test
+    public void UTF8_문자열_비밀번호_테스트() {
+        String utf8Password = "パスワード安全";
+        String encodePassword = bCryptPasswordEncoder.encode(utf8Password);
+        assertThat(bCryptPasswordEncoder.matches(utf8Password, encodePassword)).isTrue();
+    }
 //
 //    @Test
 //    public void 연속된_숫자_비밀번호_테스트() {

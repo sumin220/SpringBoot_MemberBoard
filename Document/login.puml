@@ -1,0 +1,56 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam activityBackgroundColor #EFEFEF
+skinparam activityBorderColor #CCCCCC
+skinparam sequenceArrowThickness 2
+skinparam sequenceParticipantBorderThickness 1
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam sequenceLifeLineBorderColor #000000
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+skinparam noteBackgroundColor #FFFFCC
+skinparam noteBorderColor #000000
+
+participant "Client" as C
+participant "Server" as S
+participant "Auth Module" as AM
+participant "회원 관리" as MM
+participant "Database" as DB
+
+group 로그인
+    autonumber 1 "(0)"
+    C -> S: POST /api/v1/auth/login 요청 (이메일, 비밀번호 포함)
+    S -> AM: 로그인 요청 처리
+    AM -> MM: 사용자 정보 조회 요청 (이메일)
+    MM -> DB: SELECT * FROM members WHERE email = 입력 이메일
+    DB --> MM: 사용자 데이터 반환
+    alt 사용자 존재
+        MM --> AM: 사용자 데이터
+        AM -> AM: 비밀번호 검증
+        alt 비밀번호 일치
+            AM -> AM: JWT 토큰 생성 (Access Token, Refresh Token)
+            AM --> S: 토큰 반환
+            S --> C: 200 OK (Access Token, Refresh Token 포함)
+        else 비밀번호 불일치
+            AM --> S: 인증 실패
+            S --> C: 401 Unauthorized (잘못된 비밀번호)
+        end
+    else 사용자 없음
+        MM --> AM: 사용자 없음
+        AM --> S: 인증 실패
+        S --> C: 404 Not Found (사용자 없음)
+    end
+end
+
+note right of C: 클라이언트는 사용자 또는 애플리케이션을 나타냅니다.
+note left of S: 서버는 백엔드 시스템을 나타냅니다.
+note left of MM: 회원 관리: 회원 관련 작업 처리
+
+@enduml

@@ -21,43 +21,38 @@ skinparam noteBorderColor #000000
 participant "Client" as C
 participant "Server" as S
 participant "Auth Module" as AM
-participant "커뮤니티 관리" as CM
+participant "회원 관리" as MM
 participant "Database" as DB
 
-group 게시물 중재
+group 회원가입
     autonumber 1 "(0)"
-    C -> S: POST /api/v1/posts/{id}/moderate 요청 (중재 데이터 포함)
-    S -> AM: JWT 토큰 검증 요청
-    AM -> AM: 토큰 유효성 확인
-    alt 토큰 유효
-        AM --> S: 인증 성공 (userId 반환)
-        S -> CM: 게시물 중재 요청 (userId, postId, 중재 데이터)
-        CM -> DB: SELECT * FROM members WHERE id = userId
-        DB --> CM: 사용자 데이터 반환
-        alt 관리자 권한 확인
-            CM -> DB: SELECT * FROM posts WHERE id = postId
-            DB --> CM: 게시물 데이터 반환
-            alt 게시물 존재
-                CM -> DB: UPDATE posts SET status = 'moderated', reason = ... WHERE id = postId
-                DB --> CM: 중재 성공
-                CM --> S: 중재 완료
-                S --> C: 200 OK (중재 성공)
-            else 게시물 없음
-                CM --> S: 게시물 없음 오류
-                S --> C: 404 Not Found (게시물 없음)
-            end
-        else 관리자 권한 없음
-            CM --> S: 권한 오류
-            S --> C: 403 Forbidden (권한 없음)
+    C -> S: POST /api/v1/auth/sign-up 요청 (이메일, 비밀번호, 이름 등 포함)
+    S -> AM: 회원가입 요청 처리
+    AM -> MM: 회원 데이터 검증 및 생성 요청
+    MM -> MM: 요청 데이터 검증 (이메일 형식, 비밀번호 강도 등)
+    alt 데이터 유효
+        MM -> DB: SELECT * FROM members WHERE email = 입력 이메일
+        DB --> MM: 이메일 중복 여부 반환
+        alt 이메일 중복 없음
+            MM -> DB: INSERT INTO members (email, password, name, ...) VALUES (...)
+            DB --> MM: 생성 성공
+            MM --> AM: 회원 생성 완료
+            AM --> S: 회원가입 성공
+            S --> C: 201 Created (회원가입 성공)
+        else 이메일 중복
+            MM --> AM: 이메일 중복 오류
+            AM --> S: 이메일 중복
+            S --> C: 409 Conflict (이메일 중복)
         end
-    else 토큰 유효하지 않음
-        AM --> S: 인증 실패
-        S --> C: 401 Unauthorized (인증 실패)
+    else 데이터 유효하지 않음
+        MM --> AM: 데이터 검증 실패
+        AM --> S: 잘못된 요청
+        S --> C: 400 Bad Request (잘못된 요청)
     end
 end
 
 note right of C: 클라이언트는 사용자 또는 애플리케이션을 나타냅니다.
 note left of S: 서버는 백엔드 시스템을 나타냅니다.
-note left of CM: 커뮤니티 관리: 커뮤니티 관련 작업 처리
+note left of MM: 회원 관리: 회원 관련 작업 처리
 
 @enduml

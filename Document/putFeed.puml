@@ -1,0 +1,62 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam activityBackgroundColor #EFEFEF
+skinparam activityBorderColor #CCCCCC
+skinparam sequenceArrowThickness 2
+skinparam sequenceParticipantBorderThickness 1
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam sequenceLifeLineBorderColor #000000
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+skinparam noteBackgroundColor #FFFFCC
+skinparam noteBorderColor #000000
+
+participant "Client" as C
+participant "Server" as S
+participant "Auth Module" as AM
+participant "커뮤니티 관리" as CM
+participant "Database" as DB
+
+group 피드 수정
+    autonumber 1 "(0)"
+    C -> S: PUT /api/v1/feed/{id} 요청 (수정 데이터 포함)
+    S -> AM: JWT 토큰 검증 요청
+    AM -> AM: 토큰 유효성 확인
+    alt 토큰 유효
+        AM --> S: 인증 성공 (userId 반환)
+        S -> CM: 피드 수정 요청 (userId, feedId, 수정 데이터)
+        CM -> CM: 요청 데이터 검증
+        CM -> DB: SELECT * FROM feeds WHERE id = feedId
+        DB --> CM: 피드 데이터 반환
+        alt 피드 존재
+            alt 권한 확인 (userId == authorId)
+                CM -> DB: UPDATE feeds SET title = ..., content = ... WHERE id = feedId
+                DB --> CM: 수정 성공
+                CM --> S: 수정된 피드 데이터
+                S --> C: 200 OK (수정 성공)
+            else 권한 없음
+                CM --> S: 권한 오류
+                S --> C: 403 Forbidden (권한 없음)
+            end
+        else 피드 없음
+            CM --> S: 피드 없음 오류
+            S --> C: 404 Not Found (피드 없음)
+        end
+    else 토큰 유효하지 않음
+        AM --> S: 인증 실패
+        S --> C: 401 Unauthorized (인증 실패)
+    end
+end
+
+note right of C: 클라이언트는 사용자 또는 애플리케이션을 나타냅니다.
+note left of S: 서버는 백엔드 시스템을 나타냅니다.
+note left of CM: 커뮤니티 관리: 피드 관련 작업 처리
+
+@enduml

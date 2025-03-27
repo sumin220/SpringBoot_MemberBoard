@@ -1,0 +1,53 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam activityBackgroundColor #EFEFEF
+skinparam activityBorderColor #CCCCCC
+skinparam sequenceArrowThickness 2
+skinparam sequenceParticipantBorderThickness 1
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam sequenceLifeLineBorderColor #000000
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+skinparam noteBackgroundColor #FFFFCC
+skinparam noteBorderColor #000000
+
+participant "Client" as C
+participant "Server" as S
+participant "Auth Module" as AM
+participant "알림 관리" as NM
+participant "MongoDB" as DB
+
+group 알림 목록 조회
+    autonumber 1 "(0)"
+    C -> S: GET /api/v1/notification 요청 (쿼리 파라미터: page, size)
+    S -> AM: JWT 토큰 검증 요청
+    AM -> AM: 토큰 유효성 확인
+    alt 토큰 유효
+        AM --> S: 인증 성공 (userId 반환)
+        S -> NM: 알림 목록 조회 요청 (userId, page, size)
+        DB --> NM: 알림 목록 반환
+        alt 알림 존재
+            NM --> S: 알림 목록 데이터
+            S --> C: 200 OK (알림 목록 응답)
+        else 알림 없음
+            NM --> S: 알림 없음
+            S --> C: 200 OK (빈 목록 반환)
+        end
+    else 토큰 유효하지 않음
+        AM --> S: 인증 실패
+        S --> C: 401 Unauthorized (인증 실패)
+    end
+end
+
+note right of C: 클라이언트는 사용자 또는 애플리케이션을 나타냅니다.
+note left of S: 서버는 백엔드 시스템을 나타냅니다.
+note left of NM: 알림 관리: 알림 관련 작업 처리
+
+@enduml

@@ -21,21 +21,27 @@ skinparam noteBorderColor #000000
 participant "Client" as C
 participant "Server" as S
 participant "Auth Module" as AM
-participant "Minio Module" as S3M
-participant "Minio" as S3
+participant "채팅 관리" as CHM
+participant "MongoDB" as DB
 
-group 업로드 Presigned URL
+group WebSocket 채팅 연결
     autonumber 1 "(0)"
-    C -> S: GET /api/v1/s3/upload 요청
+    C -> S: WS /api/v1/chat/room/{roomId}/ws 연결 요청
     S -> AM: JWT 토큰 검증 요청
     AM -> AM: 토큰 유효성 확인
     alt 토큰 유효
         AM --> S: 인증 성공 (userId 반환)
-        S -> S3M: Presigned URL 생성 요청
-        S3M -> S3: Presigned URL 생성 요청 (GET)
-        S3 --> S3M: Presigned URL 반환
-        S3M --> S: Presigned URL
-        S --> C: 200 OK (Presigned URL 응답)
+        S -> CHM: WebSocket 연결 요청
+        CHM -> DB: db.chatRooms.findOne
+        DB --> CHM: 채팅방 데이터 반환
+        alt 채팅방 존재
+            CHM -> CHM: WebSocket 연결 설정
+            CHM --> S: WebSocket 연결 성공
+            S --> C: WebSocket 연결 성공 (ws 연결 유지)
+        else 채팅방 없음 또는 권한 없음
+            CHM --> S: 채팅방 없음 오류
+            S --> C: 404 Not Found (채팅방 없음)
+        end
     else 토큰 유효하지 않음
         AM --> S: 인증 실패
         S --> C: 401 Unauthorized (인증 실패)
@@ -44,6 +50,6 @@ end
 
 note right of C: 클라이언트는 사용자 또는 애플리케이션을 나타냅니다.
 note left of S: 서버는 백엔드 시스템을 나타냅니다.
-note left of S3M: S3 Module: S3 관련 작업 처리
+note left of CHM: 채팅 관리: 채팅 관련 작업 처리
 
 @enduml

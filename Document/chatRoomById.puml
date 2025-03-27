@@ -1,0 +1,61 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam activityBackgroundColor #EFEFEF
+skinparam activityBorderColor #CCCCCC
+skinparam sequenceArrowThickness 2
+skinparam sequenceParticipantBorderThickness 1
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam sequenceLifeLineBorderColor #000000
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+skinparam noteBackgroundColor #FFFFCC
+skinparam noteBorderColor #000000
+
+participant "Client" as C
+participant "Server" as S
+participant "Auth Module" as AM
+participant "채팅 관리" as CHM
+participant "MongoDB" as DB
+
+group 특정 채팅방 메시지 조회
+    autonumber 1 "(0)"
+    C -> S: GET /api/v1/chat/room/{roomId} 요청
+    S -> AM: JWT 토큰 검증 요청
+    AM -> AM: 토큰 유효성 확인
+    alt 토큰 유효
+        AM --> S: 인증 성공 (userId 반환)
+        S -> CHM: 채팅방 메시지 조회 요청 (userId, roomId, page, size)
+        CHM -> DB: db.chatRooms.findOne
+        DB --> CHM: 채팅방 데이터 반환
+        alt 채팅방 존재
+            CHM -> DB: db.messages.find
+            DB --> CHM: 메시지 목록 반환
+            alt 메시지 존재
+                CHM --> S: 메시지 목록 데이터
+                S --> C: 200 OK (메시지 목록 응답)
+            else 메시지 없음
+                CHM --> S: 메시지 없음
+                S --> C: 200 OK (빈 목록 반환)
+            end
+        else 채팅방 없음 또는 권한 없음
+            CHM --> S: 채팅방 없음 오류
+            S --> C: 404 Not Found (채팅방 없음)
+        end
+    else 토큰 유효하지 않음
+        AM --> S: 인증 실패
+        S --> C: 401 Unauthorized (인증 실패)
+    end
+end
+
+note right of C: 클라이언트는 사용자 또는 애플리케이션을 나타냅니다.
+note left of S: 서버는 백엔드 시스템을 나타냅니다.
+note left of CHM: 채팅 관리: 채팅 관련 작업 처리
+
+@enduml

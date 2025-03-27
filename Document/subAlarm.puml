@@ -1,0 +1,60 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam activityBackgroundColor #EFEFEF
+skinparam activityBorderColor #CCCCCC
+skinparam sequenceArrowThickness 2
+skinparam sequenceParticipantBorderThickness 1
+skinparam sequenceParticipantBackgroundColor #FFFFFF
+skinparam sequenceLifeLineBorderColor #000000
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+skinparam noteBackgroundColor #FFFFCC
+skinparam noteBorderColor #000000
+
+participant "Client" as C
+participant "Server" as S
+participant "Auth Module" as AM
+participant "알림 관리" as NM
+participant "MongoDB" as DB
+participant "유사도 계산 모듈" as SM
+
+group 알림 구독 (SSE)
+    autonumber 1 "(0)"
+    C -> S: GET /api/v1/notification/subscribe 요청 (SSE 연결 요청)
+    S -> AM: JWT 토큰 검증 요청
+    AM -> AM: 토큰 유효성 확인
+    alt 토큰 유효
+        AM --> S: 인증 성공 (userId 반환)
+        S -> NM: SSE 연결 설정 (userId)
+        NM -> NM: SSE 스트림 생성
+        NM --> C: SSE 연결 성공 (event-stream 연결 유지)
+        loop 유사도 계산 및 알림 발생
+            NM -> SM: 유사도 계산 요청 (userId, 비교 데이터)
+            SM -> SM: 유사도 계산
+            alt 유사도 >= 70%
+                SM --> NM: 유사도 결과 (유사도 70% 이상)
+                DB --> NM: 알림 저장 성공
+                NM --> C: SSE 이벤트 전송 (event: notification, data: 알림 데이터)
+            else 유사도 < 70%
+                SM --> NM: 유사도 결과 (유사도 70% 미만)
+                NM -> NM: 알림 생성 안 함
+            end
+        end
+    else 토큰 유효하지 않음
+        AM --> S: 인증 실패
+        S --> C: 401 Unauthorized (인증 실패)
+    end
+end
+
+note right of C: 클라이언트는 사용자 또는 애플리케이션을 나타냅니다.
+note left of S: 서버는 백엔드 시스템을 나타냅니다.
+note left of NM: 알림 관리: 알림 관련 작업 처리
+
+@enduml

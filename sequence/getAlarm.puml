@@ -1,0 +1,28 @@
+@startuml
+hide footbox
+autoactivate on
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 알림 목록 조회
+    autonumber 1 "(0)"
+    C -> S: GET /api/v1/notification
+    S -> DB: 알림 조회
+    DB --> S: 알림 데이터 반환
+    alt 알림 존재
+        S --> C: 200 OK
+    else 알림 없음
+        S --> C: 200 OK (빈 목록)
+    end
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+@enduml

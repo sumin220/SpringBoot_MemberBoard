@@ -1,0 +1,32 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 토큰 재발급
+    autonumber 1 "(0)"
+    C -> S: POST /api/v1/auth/reissue (Refresh Token)
+    S -> S: 토큰 확인
+    alt 토큰 유효
+        S -> S: 새 토큰 생성
+        S --> C: 200 OK (새 토큰 반환)
+    else 토큰 유효하지 않음
+        S --> C: 401 Unauthorized
+    end
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+hide footbox
+autoactivate on
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 채팅방 생성
+    autonumber 1 "(0)"
+    C -> S: POST /api/v1/chat/room
+    S -> DB: 채팅방 생성
+    DB --> S: 생성 성공
+    S --> C: 201 Created
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+hide footbox
+autoactivate on
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 관리자 로그아웃
+    autonumber 1 "(0)"
+    C -> S: POST /api/v1/admin/logout
+    S -> DB: 로그아웃 처리
+    DB --> S: 처리 성공
+    S --> C: 200 OK
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+@enduml

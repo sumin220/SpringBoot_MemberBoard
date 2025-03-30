@@ -1,0 +1,28 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "AWS S3" as S3
+
+group 업로드 Presigned URL
+    autonumber 1 "(0)"
+    C -> S: GET /api/v1/s3/upload (파일 메타데이터)
+    S -> S3: Presigned URL 생성 요청
+    S3 --> S: Presigned URL 반환
+    S --> C: 200 OK (Presigned URL)
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+
+@enduml

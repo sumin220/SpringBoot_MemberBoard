@@ -1,0 +1,42 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 피드 좋아요
+    autonumber 1 "(0)"
+    C -> S: POST /api/v1/like/{id}
+    S -> DB: 피드 조회
+    DB --> S: 피드 데이터 반환
+    alt 피드 존재
+        S -> DB: 좋아요 조회
+        DB --> S: 좋아요 여부 반환
+        alt 좋아요 없음
+            S -> DB: 좋아요 추가
+            DB --> S: 추가 성공
+            S -> DB: 좋아요 수 증가
+            DB --> S: 업데이트 성공
+            S --> C: 200 OK
+        else 이미 좋아요 있음
+            S --> C: 409 Conflict
+        end
+    else 피드 없음
+        S --> C: 404 Not Found
+    end
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+
+@enduml

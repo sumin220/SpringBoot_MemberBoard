@@ -1,0 +1,30 @@
+@startuml
+hide footbox
+autoactivate on
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 특정 채팅방 메시지 조회
+    autonumber 1 "(0)"
+    C -> S: GET /api/v1/chat/room/{roomId}
+    S -> DB: 채팅방 조회
+    DB --> S: 채팅방 데이터 반환
+    alt 채팅방 존재
+        S -> DB: 메시지 조회
+        DB --> S: 메시지 데이터 반환
+        S --> C: 200 OK
+    else 채팅방 없음
+        S --> C: 404 Not Found
+    end
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+@enduml

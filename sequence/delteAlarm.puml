@@ -1,0 +1,30 @@
+@startuml
+hide footbox
+autoactivate on
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 알림 삭제
+    autonumber 1 "(0)"
+    C -> S: DELETE /api/v1/notification/{id}
+    S -> DB: 알림 조회
+    DB --> S: 알림 데이터 반환
+    alt 알림 존재
+        S -> DB: 알림 삭제
+        DB --> S: 삭제 성공
+        S --> C: 200 OK
+    else 알림 없음
+        S --> C: 404 Not Found
+    end
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+@enduml

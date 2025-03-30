@@ -1,0 +1,39 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 유저 정보 수정
+    autonumber 1 "(0)"
+    C -> S: PUT /api/v1/user (수정 데이터)
+    S -> S: 데이터 검증
+    alt 데이터 유효
+        S -> DB: 유저 조회
+        DB --> S: 유저 데이터 반환
+        alt 유저 존재
+            S -> DB: 유저 정보 업데이트
+            DB --> S: 업데이트 성공
+            S --> C: 200 OK
+        else 유저 없음
+            S --> C: 404 Not Found
+        end
+    else 데이터 유효하지 않음
+        S --> C: 400 Bad Request
+    end
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+
+@enduml

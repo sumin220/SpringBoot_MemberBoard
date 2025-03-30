@@ -1,0 +1,32 @@
+@startuml
+
+hide footbox
+autoactivate on
+
+' 스타일 설정
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 유저 정보 조회
+    autonumber 1 "(0)"
+    C -> S: GET /api/v1/user
+    S -> DB: 유저 조회
+    DB --> S: 유저 데이터 반환
+    alt 유저 존재
+        S --> C: 200 OK (유저 데이터)
+    else 유저 없음
+        S --> C: 404 Not Found
+    end
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+
+@enduml

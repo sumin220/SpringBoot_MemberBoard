@@ -321,21 +321,21 @@ public class JwtFilterAuthenticationTest {
 
     }
 
-//    @Test
-//    public void 로그인_주소로_보내면_필터작동_X() throws Exception {
-//        //given
-//        Map accessAndRefreshToken = getAccessAndRefreshToken();
-//        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
-//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-//
-//        //when, then
-//        MvcResult result = mockMvc.perform(post(LOGIN_URL)  //get인 경우 config에서 permitAll을 했기에 notFound
-//                        .header(refreshHeader, BEARER + refreshToken)
-//                        .header(accessHeader, BEARER + accessToken))
-//                .andExpect(status().isBadRequest())
-//                .andReturn();
-//
-//    }
+    @Test
+    public void 로그인_주소로_보내면_필터작동_X() throws Exception {
+        //given
+        Map accessAndRefreshToken = getAccessAndRefreshToken();
+        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
+        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+
+        //when, then
+        MvcResult result = mockMvc.perform(post(LOGIN_URL)  //get인 경우 config에서 permitAll을 했기에 notFound
+                        .header(refreshHeader, BEARER + refreshToken)
+                        .header(accessHeader, BEARER + accessToken))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+    }
 
 
 

@@ -125,11 +125,11 @@ class SecurityConfigTest {
         String encodePassword = bCryptPasswordEncoder.encode(sequentialNumbers);
         assertThat(bCryptPasswordEncoder.matches(sequentialNumbers, encodePassword)).isTrue();
     }
-//
-//    @Test
-//    public void 해시된_비밀번호를_직접_비교하면_실패() {
-//        String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
-//        assertThat(PASSWORD.equals(encodePassword)).isFalse();
-//    }
+
+    @Test
+    public void 해시된_비밀번호를_직접_비교하면_실패() {
+        String encodePassword = bCryptPasswordEncoder.encode(PASSWORD);
+        assertThat(PASSWORD.equals(encodePassword)).isFalse();
+    }
 
 }

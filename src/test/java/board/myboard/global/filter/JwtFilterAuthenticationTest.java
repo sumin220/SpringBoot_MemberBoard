@@ -242,28 +242,28 @@ public class JwtFilterAuthenticationTest {
      * AccessToken : 유효하지 않음
      * RefreshToken : 유효
      */
-//    @Test
-//    public void 유효한RefreshToken이랑_안유효한AccessToken_같이보냈을때_AccessToken_재발급_200() throws Exception {
-//        //given
-//        Map accessAndRefreshToken = getAccessAndRefreshToken();
-//        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
-//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-//
-//        //when, then
-//        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
-//                        .header(refreshHeader, BEARER + refreshToken)
-//                        .header(accessHeader, BEARER + accessToken + 1))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        String responseAccessToken = result.getResponse().getHeader(accessHeader);
-//        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
-//
-//        String subject = JWT.require(Algorithm.HMAC512(secret)).build().verify(responseAccessToken).getSubject();
-//
-//        assertThat(subject).isEqualTo(ACCESS_TOKEN_SUBJECT);
-//        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
-//    }
+    @Test
+    public void 유효한RefreshToken이랑_안유효한AccessToken_같이보냈을때_AccessToken_재발급_200() throws Exception {
+        //given
+        Map accessAndRefreshToken = getAccessAndRefreshToken();
+        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
+        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+
+        //when, then
+        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
+                        .header(refreshHeader, BEARER + refreshToken)
+                        .header(accessHeader, BEARER + accessToken + 1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseAccessToken = result.getResponse().getHeader(accessHeader);
+        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
+
+        String subject = JWT.require(Algorithm.HMAC512(secret)).build().verify(responseAccessToken).getSubject();
+
+        assertThat(subject).isEqualTo(ACCESS_TOKEN_SUBJECT);
+        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
+    }
 
 
     /**

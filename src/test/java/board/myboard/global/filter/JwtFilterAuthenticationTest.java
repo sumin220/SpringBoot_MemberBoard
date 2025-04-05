@@ -270,27 +270,27 @@ public class JwtFilterAuthenticationTest {
      * AccessToken : 유효
      * RefreshToken : 유효하지 않음
      */
-//    @Test
-//    public void 안유효한RefreshToken이랑_유효한AccessToken_같이보냈을때_상태코드200_혹은404_RefreshToken은_AccessToken모두_재발급되지않음() throws Exception {
-//        //given
-//        Map accessAndRefreshToken = getAccessAndRefreshToken();
-//        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
-//        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
-//
-//        //when, then
-//        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
-//                        .header(refreshHeader, BEARER + refreshToken+1)
-//                        .header(accessHeader, BEARER + accessToken ))
-//                .andExpect(status().isNotFound())//없는 주소로 보냈으므로 NotFound
-//                .andReturn();
-//
-//        String responseAccessToken = result.getResponse().getHeader(accessHeader);
-//        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
-//
-//
-//        assertThat(responseAccessToken).isNull();//accessToken은 재발급되지 않음
-//        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
-//    }
+    @Test
+    public void 안유효한RefreshToken이랑_유효한AccessToken_같이보냈을때_상태코드200_혹은404_RefreshToken은_AccessToken모두_재발급되지않음() throws Exception {
+        //given
+        Map accessAndRefreshToken = getAccessAndRefreshToken();
+        String accessToken= (String) accessAndRefreshToken.get(accessHeader);
+        String refreshToken= (String) accessAndRefreshToken.get(refreshHeader);
+
+        //when, then
+        MvcResult result = mockMvc.perform(get(LOGIN_URL + "123")
+                        .header(refreshHeader, BEARER + refreshToken+1)
+                        .header(accessHeader, BEARER + accessToken ))
+                .andExpect(status().isNotFound())//없는 주소로 보냈으므로 NotFound
+                .andReturn();
+
+        String responseAccessToken = result.getResponse().getHeader(accessHeader);
+        String responseRefreshToken = result.getResponse().getHeader(refreshHeader);
+
+
+        assertThat(responseAccessToken).isNull();//accessToken은 재발급되지 않음
+        assertThat(responseRefreshToken).isNull();//refreshToken은 재발급되지 않음
+    }
 
 
 

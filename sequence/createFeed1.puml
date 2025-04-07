@@ -11,10 +11,10 @@ participant "Client" as C
 participant "Server" as S
 participant "Database" as DB
 
-group 게시물 생성
+group 게시글 생성
     autonumber 1 "(0)"
-    C -> S: POST /api/v1/posts
-    S -> DB: 게시물 생성
+    C -> S: POST /api/v1/feed
+    S -> DB: 게시글 생성
     DB --> S: 생성 성공
     S --> C: 201 Created
 end

@@ -11,14 +11,14 @@ participant "Client" as C
 participant "Server" as S
 participant "Database" as DB
 
-group 게시물 조회
+group 게시글 조회
     autonumber 1 "(0)"
-    C -> S: GET /api/v1/posts/{id}
-    S -> DB: 게시물 조회
-    DB --> S: 게시물 데이터 반환
-    alt 게시물 존재
+    C -> S: GET /api/v1/feed/{id}
+    S -> DB: 게시글 조회
+    DB --> S: 게시글 데이터 반환
+    alt 게시글 존재
         S --> C: 200 OK
-    else 게시물 없음
+    else 게시글 없음
         S --> C: 404 Not Found
     end
 end

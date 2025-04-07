@@ -14,14 +14,14 @@ participant "Client" as C
 participant "Server" as S
 participant "Database" as DB
 
-group 특정 피드 조회
+group 특정 게시글 조회
     autonumber 1 "(0)"
     C -> S: GET /api/v1/feed/{id}
-    S -> DB: 피드 조회
-    DB --> S: 피드 데이터 반환
-    alt 피드 존재
-        S --> C: 200 OK (피드 데이터)
-    else 피드 없음
+    S -> DB: 게시글 조회
+    DB --> S: 게시글 데이터 반환
+    alt 게시글 존재
+        S --> C: 200 OK (게시글 데이터)
+    else 게시글 없음
         S --> C: 404 Not Found
     end
 end

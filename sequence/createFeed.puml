@@ -14,12 +14,12 @@ participant "Client" as C
 participant "Server" as S
 participant "Database" as DB
 
-group 피드 생성
+group 게시글 생성
     autonumber 1 "(0)"
-    C -> S: POST /api/v1/feed (피드 데이터)
+    C -> S: POST /api/v1/feed (게시글 데이터)
     S -> S: 데이터 검증
     alt 데이터 유효
-        S -> DB: 피드 저장
+        S -> DB: 게시글 저장
         DB --> S: 저장 성공
         S --> C: 201 Created
     else 데이터 유효하지 않음

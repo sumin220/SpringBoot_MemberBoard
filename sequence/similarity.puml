@@ -1,0 +1,29 @@
+@startuml
+hide footbox
+autoactivate on
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontSize 12
+skinparam defaultFontName Arial
+skinparam sequenceArrowThickness 2
+
+participant "Client" as C
+participant "Server" as S
+participant "Database" as DB
+
+group 유사도 추출 및 저장
+    autonumber 1 "(0)"
+    C -> S: POST /api/v1/animal-similarity
+    S -> S: 유사도 계산 (신고 사진 vs 발견 사진)
+    alt 유사도 >= 70%
+        S -> DB: 유사도 데이터 저장
+        DB --> S: 저장 성공
+        S --> C: 201 Created
+    else 유사도 < 70%
+        S --> C: 200 OK (저장 안 함)
+    end
+end
+
+note right of C: 클라이언트: 사용자 또는 앱
+note left of S: 서버: 요청 처리
+@enduml

@@ -14,7 +14,7 @@ participant "Client" as C
 participant "Server" as S
 participant "AWS S3" as S3
 
-group 다운로드 Presigned URL
+group 다운로드 Presigned URL 가져오기
     autonumber 1 "(0)"
     C -> S: GET /api/v1/s3/upload/{fileName}
     S -> S3: Presigned URL 생성 요청
